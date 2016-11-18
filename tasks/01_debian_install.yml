@@ -1,0 +1,22 @@
+---
+
+- name: Dependencies
+  apt:
+    name: "{{ packages }}"
+    state: present
+
+- name: Retrieve Docker GPG key
+  apt_key:
+    keyserver: "{{ docker_key_server }}"
+    id: "{{ docker_key_id }}"
+
+- name: Install Docker repository
+  apt_repository:
+    repo: "{{ docker_repository }}"
+    state: present
+    update_cache: yes
+
+- name: Install Docker
+  apt:
+    name: docker-engine
+    state: present

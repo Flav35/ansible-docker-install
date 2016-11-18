@@ -1,0 +1,12 @@
+- name: Enable kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items: kernel_modules
+
+- name: Update Docker storage driver to AUFS
+  lineinfile:
+    dest: /etc/default/docker
+    line: 'DOCKER_OPTS="--storage-driver=aufs"'
+    state: present
+  notify: restart docker

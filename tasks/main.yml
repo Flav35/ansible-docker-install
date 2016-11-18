@@ -1,0 +1,20 @@
+- block:
+  - include_vars: debian.yml
+
+  - name: Install Docker (Debian)
+    include: 01_debian_install.yml
+
+  - name: Configure Docker (Debian)
+    include: 02_debian_configure.yml
+    when: docker_aufs
+  when: ansible_os_family == "Debian"
+
+- block:
+  - include_vars: redhat.yml
+
+  - name: Install Docker (RedHat)
+    include: 01_redhat_install.yml
+
+  - name: Configure Docker (RedHat)
+    include: 02_redhat_configure.yml
+  when: ansible_os_family == "RedHat"
