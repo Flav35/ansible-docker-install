@@ -1,0 +1,50 @@
+---
+
+- name: Dependencies
+  yum:
+    name: "{{ packages }}"
+    state: present
+
+- name: Install Docker repository
+  yum_repository:
+    name: docker
+    description: Docker official repository
+    baseurl: "{{ docker_repository }}"
+    gpgkey: "{{ docker_gpg_key }}"
+    gpgcheck: yes
+    state: present
+
+- name: Install Docker
+  yum:
+    name: docker-engine
+    state: present
+    update_cache: yes
+
+- name: Configure systemd unit file (1/3)
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+  with_items:
+    - /etc/docker
+    - /etc/systemd/system/docker.service.d
+
+- name: Configure systemd unit file (2/3)
+  file:
+    dest: /etc/docker/daemon.json
+    state: touch
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Configure systemd unit file (3/3)
+  copy:
+    src: docker.service
+    dest: /etc/systemd/system/docker.service.d/docker.service
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - daemon-reload
+    - restart docker

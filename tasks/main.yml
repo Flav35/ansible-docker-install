@@ -1,20 +1,21 @@
 - block:
-  - include_vars: debian.yml
+  - include_vars: ubuntu.yml
 
-  - name: Install Docker (Debian)
-    include: 01_debian_install.yml
+  - name: Install Docker (Ubuntu)
+    include: 01_ubuntu_install.yml
 
-  - name: Configure Docker (Debian)
-    include: 02_debian_configure.yml
+  - name: Configure Docker (Ubuntu)
+    include: 02_ubuntu_configure.yml
     when: docker_aufs
-  when: ansible_os_family == "Debian"
+  when: ansible_distribution == "Ubuntu"
 
 - block:
-  - include_vars: redhat.yml
+  - include_vars: centos.yml
 
-  - name: Install Docker (RedHat)
-    include: 01_redhat_install.yml
+  - name: Install Docker (CentOS)
+    include: 01_centos_install.yml
 
-  - name: Configure Docker (RedHat)
-    include: 02_redhat_configure.yml
-  when: ansible_os_family == "RedHat"
+  - name: Configure Docker (CentOS)
+    include: 02_centos_configure.yml
+    when: docker_direct_lvm
+  when: ansible_distribution == "CentOS"

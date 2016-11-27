@@ -8,48 +8,53 @@ ansible 2.1
 
 Role Vars
 ---------
-### Storage drivers
+### Storage drivers (Ubuntu only)
 ```yaml
-    docker_aufs: yes
+    docker_aufs: true
 ```
-### Kernel modules
+### Kernel modules (Ubuntu only)
 ```yaml
     kernel_modules:
       - aufs
       - configfs
 ```
+### Storage drivers (CentOS only)
+```yaml
+    docker_direct_lvm: true
+    docker_volume_group: "docker"
+```
 Dependencies
 ------------
-None
+Ansible 2.0
 
 
 Playbook examples
 -----------------
+
 ```yaml
-    - hosts: all
-      become: yes
+    - hosts: ubuntu-server
       roles:
-        - ansible-docker-install
+        - role: ansible-docker-install
+          docker_aufs: true
 ```
 
 ```yaml
-    - hosts: all
-      become: yes
+    - hosts: centos-server
       roles:
-        - { role: ansible-docker-install, docker_aufs: true }
+        - role: ansible-docker-install
+          docker_direct_lvm: true
+          docker_volume_group: "vgdodock"
 ```
 
 Distrib Support
 ---------------
 | Distribution | Compat | Test  |
 | ------------ |:------:|:-----:|
-|    CentOS 7  |   N    |   N   |
+|    CentOS 7  |   Y    |   Y   |
 | Ubuntu 16.04 |   Y    |   Y   |
 
 
 TODO
 ----
-* CentOS compat
 * Debian compat
-* More storage drivers
-* Some checks
+* More storage drivers (aufs: done, direct lvm: done)

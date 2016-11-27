@@ -1,0 +1,54 @@
+---
+
+- name: Devicemapper driver - Create LVs
+  lvol:
+    vg: "{{ docker_volume_group }}"
+    lv: "{{ item.key }}"
+    size: "{{ item.value }}"
+    opts: "--wipesignatures y"
+  with_dict:
+    thinpool: "95%VG"
+    thinpoolmeta: "1%VG"
+
+- name: Devicemapper driver - Configure thin pool (1/2)
+  command: "lvconvert -y --zero n -c 512K --thinpool {{ docker_volume_group }}/thinpool --poolmetadata {{ docker_volume_group }}/thinpoolmeta"
+  args:
+    creates: "/etc/lvm/{{ docker_volume_group }}-created"
+  register: lvm_created
+
+- name: Devicemapper driver - Configure thin pool (2/2)
+  file:
+    dest: "/etc/lvm/{{ docker_volume_group }}-created"
+    state: touch
+  when: lvm_created
+
+- name: Devicemapper driver - Autoextend configuration
+  copy:
+    src: docker-thinpool.profile
+    dest: "/etc/lvm/profile/{{ docker_volume_group }}-thinpool.profile"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Devicemapper driver - Apply profile (1/2)
+  command: "lvchange --metadataprofile {{ docker_volume_group }}-thinpool {{ docker_volume_group }}/thinpool"
+  args:
+    creates: "/etc/lvm/{{ docker_volume_group }}-configured"
+  register: lvm_configured
+
+- name: Devicemapper driver - Apply profile (2/2)
+  file:
+    dest: "/etc/lvm/{{ docker_volume_group }}-configured"
+    state: touch
+  when: lvm_configured
+
+- name: Devicemapper driver - Configure docker
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - deamon-reload
+    - restart docker

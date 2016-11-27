@@ -1,4 +1,1 @@
-docker_aufs: true
-kernel_modules:
-  - aufs
-  - configfs
+docker_volume_group: "docker"

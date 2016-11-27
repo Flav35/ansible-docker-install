@@ -1,0 +1,5 @@
+docker_repository: "https://yum.dockerproject.org/repo/main/centos/7/"
+docker_gpg_key: "https://yum.dockerproject.org/gpg"
+docker_direct_lvm: true
+packages:
+  - lvm2
