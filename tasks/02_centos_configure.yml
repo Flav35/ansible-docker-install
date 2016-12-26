@@ -50,5 +50,5 @@
     owner: root
     group: root
   notify:
-    - deamon-reload
+    - daemon-reload
     - restart docker
