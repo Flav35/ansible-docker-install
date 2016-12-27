@@ -42,6 +42,11 @@
     state: touch
   when: lvm_configured
 
+- name: Devicemapper driver - Activate volumegroup
+  command: "vgchange {{ docker_volume_group }} -a y"
+  args:
+    creates: "/dev/mapper/{{ docker_volume_group }}-thinpool"
+
 - name: Devicemapper driver - Configure docker
   template:
     src: daemon.json.j2
