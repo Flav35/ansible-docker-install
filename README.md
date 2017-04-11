@@ -12,12 +12,6 @@ Role Vars
 ```yaml
     docker_aufs: true
 ```
-### Kernel modules (Ubuntu only)
-```yaml
-    kernel_modules:
-      - aufs
-      - configfs
-```
 ### Storage drivers (CentOS only)
 ```yaml
     docker_direct_lvm: true
@@ -25,7 +19,7 @@ Role Vars
 ```
 Dependencies
 ------------
-Ansible 2.0
+Ansible 2.1
 
 
 Playbook examples

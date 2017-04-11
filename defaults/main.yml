@@ -1,1 +1,3 @@
 docker_volume_group: "docker"
+docker_aufs: true
+docker_direct_lvm: true
