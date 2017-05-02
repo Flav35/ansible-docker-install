@@ -1,3 +1,5 @@
+enable_tcp_socket: false
+tcp_socket_port: 2376
+tcp_socket_bind: 0.0.0.0
 docker_volume_group: "docker"
-docker_aufs: true
-docker_direct_lvm: true
+docker_direct_lvm: false

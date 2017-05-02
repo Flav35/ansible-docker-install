@@ -1,13 +1,10 @@
 - block:
-  - include_vars: ubuntu.yml
-
   - name: Install Docker (Ubuntu)
-    include: 01_ubuntu_install.yml
+    include: 01_debian_install.yml
 
   - name: Configure Docker (Ubuntu)
-    include: 02_ubuntu_configure.yml
-    when: docker_aufs
-  when: ansible_distribution == "Ubuntu"
+    include: 02_debian_configure.yml
+  when: ansible_os_family == 'Debian'
 
 - block:
   - include_vars: centos.yml

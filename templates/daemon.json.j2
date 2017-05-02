@@ -1,8 +1,18 @@
 {
+{% if docker_direct_lvm %}
   "storage-driver": "devicemapper",
    "storage-opts": [
      "dm.thinpooldev=/dev/mapper/{{ docker_volume_group }}-thinpool",
      "dm.use_deferred_removal=true",
      "dm.use_deferred_deletion=true"
-   ]
+   ]{% if enable_tcp_socket %},{% endif %}
+{% endif %}
+
+{% if docker_aufs %}
+  "storage-driver": "aufs"{% if enable_tcp_socket %},{% endif %}
+{% endif %}
+
+{% if enable_tcp_socket %}
+  "hosts": [ "tcp://{{ tcp_socket_bind }}:{{ tcp_socket_port }}" ]
+{% endif %}
 }
